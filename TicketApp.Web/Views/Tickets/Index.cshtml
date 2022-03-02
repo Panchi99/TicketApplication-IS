@@ -1,0 +1,78 @@
+﻿@model TicketApp.Domain.DTO.TicketAndList
+
+@{ ViewData["Title"] = "Index";
+                Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <a class="btn btn-success" asp-controller="Tickets" asp-action="Create">Add new Ticket</a>
+        </div>
+        <div class="col-md-3">
+            <a class="btn btn-info" asp-controller="Tickets" asp-action="Sort">Sort by date</a>
+        </div>
+        @if (User.IsInRole("administrator"))
+        {
+            <div class="col-md-3">
+                <a class="btn btn-outline-warning" asp-controller="Tickets" asp-action="ExportAllOrders">Export Ticket</a>
+            </div>
+        }
+        else
+        {
+            @using (Html.BeginForm("FilterTicketsByCategory", "Tickets", FormMethod.Post, new { @class = "form-group" }))
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.DropDownListFor(model => model.Category, new SelectList(Model.Categories), "Select Category", new { @class = "form-control" })
+                @Html.HiddenFor(Model => Model.TicketList);
+                @Html.HiddenFor(Model => Model.Categories);
+                <input type="submit" name="button" value="Export by Category" class="btn btn-dark" />
+            }
+        }
+
+        <div class="col-md-3 form-group">
+            <form asp-action="Filter">
+                <input class="form-control" placeholder="Filter by Date" type="date" name="id" textmode="date" />
+                <input type="submit" value="Filter" class="btn btn-secondary" />
+            </form>
+        </div>
+    </div>
+
+    @for (int i = 0; i < Model.TicketList.Count; i++)
+    {
+        var item = Model.TicketList[i];
+
+        if (i % 3 == 0)
+        {
+@:<div class="row">
+}
+
+
+<div class="col-md-3 m-4">
+    <div class="card" style="width: 21rem; height: 30rem;">
+        <img class="card-img-top" src="@item.ImageUrl" style="height: 50%" alt="Image for ticket!" />
+
+        <div class="card-body">
+            <h3 class="card-title">@item.MovieName</h3>
+            <p class="card-text">@item.DateTime</p>
+
+            <h6>Price: @item.TicketPrice ден</h6>
+            <h6>Director: @item.Director</h6>
+        </div>
+
+        <div class="card-footer">
+
+            <a asp-controller="Tickets" asp-action="AddTicketToCart" asp-route-id="@item.Id" class="btn btn-info">Add to Cart</a>
+            <a asp-controller="Tickets" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary">Edit</a>
+            <a asp-controller="Tickets" asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">More Details</a>
+        </div>
+    </div>
+</div> if (i % 3 == 2)
+                {
+@:</div>
+}
+}
+
+</div>
+

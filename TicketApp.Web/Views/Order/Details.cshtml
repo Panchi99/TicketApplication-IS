@@ -1,0 +1,43 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model TicketApp.Domain.DomainModels.Order
+
+<div class="container">
+    <div class="m-3">
+        <a class="btn btn-success"> Order For: @Model.User.Email</a>
+    </div>
+
+    @for (int i = 0; i < Model.TicketInOrder.Count(); i++)
+    {
+        var item = Model.TicketInOrder.ElementAt(i).OrderedTicket;
+
+        if (i % 3 == 0)
+        {
+            @:<div class="row">
+            }
+            <div class="col-md-3 m-4">
+                <div class="card" style="width: 18rem; height: 30rem;">
+                    <img class="card-img-top" src="@item.ImageUrl" style="height: 50%" alt="Image for ticket!" />
+
+                    <div class="card-body">
+                        <h3 class="card-title">@item.MovieName</h3>
+                        <p class="card-text">@item.DateTime @item.TicketPrice ден.</p>
+
+                        <h6>Category: @item.Category</h6>
+                        <h6>Director: @item.Director</h6>
+                        <h6>Actors: @item.Actors</h6>
+                    </div>
+
+
+                </div>
+            </div> if (i % 3 == 2)
+            {
+            @:</div>
+        }
+    }
+
+</div>
